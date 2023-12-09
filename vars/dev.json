@@ -1,0 +1,9 @@
+{
+    "region": "us-east-1",
+    "deviceTableName": "device_list",
+    "sensorTableName": "sensor_list",
+    "usersTableName": "users_data",
+    "authSecret": "my-random-secret-code",
+    "authAlgoName": "HS256",
+    "authName": "Himanshu Saxena"
+}

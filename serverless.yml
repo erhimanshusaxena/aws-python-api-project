@@ -1,0 +1,185 @@
+service: aws-python-http-api-project
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  region: ${file(vars/${opt:stage, 'dev'}.json):region}
+  runtime: python3.10
+  environment:
+    DEVICE_TABLE: ${file(vars/${opt:stage, 'dev'}.json):deviceTableName}
+    SENSOR_TABLE: ${file(vars/${opt:stage, 'dev'}.json):sensorTableName}
+    USER_TABLE: ${file(vars/${opt:stage, 'dev'}.json):usersTableName}
+    AUTH_ALGO: ${file(vars/${opt:stage, 'dev'}.json):authAlgoName}
+    AUTH_SECRET: ${file(vars/${opt:stage, 'dev'}.json):authSecret}
+    AUTH_NAME: ${file(vars/${opt:stage, 'dev'}.json):authName}
+
+plugins:
+  - serverless-iam-roles-per-function
+  - serverless-python-requirements
+
+functions:
+  healthCheck:
+    handler: src/auth/health.query
+    events:
+      - http:
+          path: "health"
+          method: get
+  login:
+    handler: src/auth/login.query
+    events:
+      - http:
+          path: users/login
+          method: POST
+          cors:
+            origin: "*"
+    iamRoleStatementsName: "${sls:stage}-login-user-role"
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+          - dynamodb:Scan
+          - dynamodb:GetItem
+          - dynamodb:PutItem
+          - dynamodb:UpdateItem
+          - dynamodb:DeleteItem
+        Resource: "*"
+  register:
+    handler: src/auth/register.query
+    events:
+      - http:
+          path: users/register
+          method: POST
+          cors:
+            origin: "*"
+    iamRoleStatementsName: "${sls:stage}-register-user-role"
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+          - dynamodb:Scan
+          - dynamodb:GetItem
+          - dynamodb:PutItem
+          - dynamodb:UpdateItem
+          - dynamodb:DeleteItem
+        Resource: "*"
+  addDevice:
+    handler: src/add_device.query
+    events:
+      - http:
+          path: "addDevice"
+          method: POST
+          cors:
+            origin: "*"
+    iamRoleStatementsName: "${sls:stage}-add-device-role"
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+          - dynamodb:Scan
+          - dynamodb:GetItem
+          - dynamodb:PutItem
+          - dynamodb:UpdateItem
+          - dynamodb:DeleteItem
+        Resource: "*"
+  updateDevice:
+    handler: src/update_device.query
+    events:
+      - http:
+          path: "updateDevice"
+          method: PUT
+          cors:
+            origin: "*"
+    iamRoleStatementsName: "${sls:stage}-update-device-role"
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+          - dynamodb:Scan
+          - dynamodb:GetItem
+          - dynamodb:PutItem
+          - dynamodb:UpdateItem
+          - dynamodb:DeleteItem
+        Resource: "*"
+  addSensor:
+    handler: src/add_sensor.query
+    events:
+      - http:
+          path: "addSensor"
+          method: POST
+          cors:
+            origin: "*"
+    iamRoleStatementsName: "${sls:stage}-add-sensor-role"
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+          - dynamodb:Scan
+          - dynamodb:GetItem
+          - dynamodb:PutItem
+          - dynamodb:UpdateItem
+          - dynamodb:DeleteItem
+        Resource: "*"
+  getSensorData:
+    handler: src/get_sensor_data.query
+    events:
+      - http:
+          path: "getSensorData"
+          method: GET
+          cors:
+            origin: "*"
+    iamRoleStatementsName: "${sls:stage}-get-sensor-data-role"
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+          - dynamodb:Scan
+          - dynamodb:GetItem
+          - dynamodb:PutItem
+          - dynamodb:UpdateItem
+          - dynamodb:DeleteItem
+        Resource: "*"
+resources:
+  Resources:
+    DeviceTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${file(vars/${opt:stage, 'dev'}.json):deviceTableName}
+    SensorTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: device_id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+          - AttributeName: device_id
+            KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${file(vars/${opt:stage, 'dev'}.json):sensorTableName}
+    UsersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: email
+            AttributeType: S
+        KeySchema:
+          - AttributeName: email
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${file(vars/${opt:stage, 'dev'}.json):usersTableName}
