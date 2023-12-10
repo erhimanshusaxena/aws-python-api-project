@@ -48,7 +48,6 @@ def query(event, context):
         name = body.get("sensor_name")
         sensor_type = body.get("sensor_type")
         sensor_value = body.get("sensor_value")
-
         # Checking sensor_id of sensor to be added, and it's devise_id
         # if both present process add request
         # else return error message for empty devise_id and sensor_id

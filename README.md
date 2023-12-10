@@ -1,6 +1,6 @@
 <!--
-title: 'AWS Simple HTTP Endpoint example in Python'
-description: 'This template demonstrates how to make a simple HTTP API with Python running on AWS Lambda and API Gateway using the Serverless Framework.'
+title: 'Serverless HTTP AWS API Code'
+description: 'Serverless base AWS Python Lambdas'
 layout: Doc
 framework: v3
 platform: AWS
@@ -10,92 +10,142 @@ authorName: 'Serverless, inc.'
 authorAvatar: 'https://avatars1.githubusercontent.com/u/13742415?s=200&v=4'
 -->
 
-# Serverless Framework Python HTTP API on AWS
+# Serverless HTTP AWS APIs
+## Introduction
+This application contains 6 HTTP REST APIs with Python running on AWS Lambda and API Gateway using the Serverless Framework.
 
-This template demonstrates how to make a simple HTTP API with Python running on AWS Lambda and API Gateway using the Serverless Framework.
+This application uses DynamoDB to save and persist database
+## Setup
 
-This template does not include any kind of persistence (database). For more advanced examples, check out the [serverless/examples repository](https://github.com/serverless/examples/)  which includes DynamoDB, Mongo, Fauna and other examples.
+### Requirements
 
-## Usage
+This application requires few dependencies to be installed.
 
-### Deployment
+
+- Development Environment: Ubuntu 22.04
+- Node.js : Serverless framework requires node to be installed.
+- NPM: Node Package Manager: This already come with node(doesn't require installation).
+
+How to install node.js follow link: 
+https://nodejs.org/en/download/package-manager#debian-and-ubuntu-based-linux-distributions
+
+Successful installation can be checked with below command:
+
+```
+$ node -v 
+```
+Output:
+
+```
+v16.20.2
+```
+
+This will give you version of Nodejs installed. Your machine version can be different 
+
+#### Serverless Framework installation
+
+to install serverless framework use below command:
+
+```
+$ npm install -g serverless
+```
+
+Once your framework is installed, you need to installed serverless plugins with below commands:
+
+```
+$ serverless plugin install -n serverless-python-requirements 
+$ serverless plugin install -n serverless-iam-roles-per-function
+```
+
+#### AWS Credentials setup
+This is an important step so follow carefully. Before you can start actual deployment you need to setup your aws account credentials, follow below link below.
+https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html
+Unless to successfully setup your AWS credentials do not move ahead.
+
+### Execution
+
+To start project execution run below command 
 
 ```
 $ serverless deploy
 ```
 
-After deploying, you should see output similar to:
+Which should result in deploying for your  HTTP APIs on AWS and server less will give you list of available api and like below:
 
-```bash
+```
+$ serverless deploy
+Running "serverless" from node_modules
+
 Deploying aws-python-http-api-project to stage dev (us-east-1)
 
-✔ Service deployed to stack aws-python-http-api-project-dev (140s)
+✔ Service deployed to stack aws-python-http-api-project-dev (114s)
 
-endpoint: GET - https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/
+endpoints:
+  GET - https://10ccq2mcl.execute-api.us-east-1.amazonaws.com/dev/health
+  POST - https://10ccq2mcl.execute-api.us-east-1.amazonaws.com/dev/users/login
+  POST - https://10ccq2mcl.execute-api.us-east-1.amazonaws.com/dev/users/register
+  POST - https://10ccq2mcl.execute-api.us-east-1.amazonaws.com/dev/addDevice
+  PUT - https://10ccq2mcl.execute-api.us-east-1.amazonaws.com/dev/updateDevice
+  POST - https://10ccq2mcl.execute-api.us-east-1.amazonaws.com/dev/addSensor
+  GET - https://10ccq2mcl.execute-api.us-east-1.amazonaws.com/dev/getSensorData
+  
 functions:
-  hello: aws-python-http-api-project-dev-hello (2.3 kB)
-```
-
-_Note_: In current form, after deployment, your API is public and can be invoked by anyone. For production deployments, you might want to configure an authorizer. For details on how to do that, refer to [http event docs](https://www.serverless.com/framework/docs/providers/aws/events/apigateway/).
-
-### Invocation
-
-After successful deployment, you can call the created application via HTTP:
-
-```bash
-curl https://xxxxxxx.execute-api.us-east-1.amazonaws.com/
-```
-
-Which should result in response similar to the following (removed `input` content for brevity):
-
-```json
-{
-  "message": "Go Serverless v3.0! Your function executed successfully!",
-  "input": {
-    ...
-  }
-}
-```
-
-### Local development
-
-You can invoke your function locally by using the following command:
-
-```bash
-serverless invoke local --function hello
-```
-
-Which should result in response similar to the following:
+  healthCheck: aws-python-http-api-project-dev-healthCheck (254 kB)
+  login: aws-python-http-api-project-dev-login (254 kB)
+  register: aws-python-http-api-project-dev-register (254 kB)
+  addDevice: aws-python-http-api-project-dev-addDevice (254 kB)
+  updateDevice: aws-python-http-api-project-dev-updateDevice (254 kB)
+  addSensor: aws-python-http-api-project-dev-addSensor (254 kB)
+  getSensorData: aws-python-http-api-project-dev-getSensorData (254 kB)
 
 ```
-{
-  "statusCode": 200,
-  "body": "{\n  \"message\": \"Go Serverless v3.0! Your function executed successfully!\",\n  \"input\": \"\"\n}"
-}
-```
 
-Alternatively, it is also possible to emulate API Gateway and Lambda locally by using `serverless-offline` plugin. In order to do that, execute the following command:
+### Directory Structure
 
-```bash
-serverless plugin install -n serverless-offline
-```
-
-It will add the `serverless-offline` plugin to `devDependencies` in `package.json` file as well as will add it to `plugins` in `serverless.yml`.
-
-After installation, you can start local emulation with:
+#### `src` contains python lambda files
+#### `vars` contains json files as per environment based e.g. `dev.json`
 
 ```
-serverless offline
+.
+├── package.json
+├── package-lock.json
+├── README.md
+├── requirements.txt
+├── serverless.yml
+├── src
+│   ├── add_device.py
+│   ├── add_sensor.py
+│   ├── auth
+│   │   ├── health.py
+│   │   ├── __init__.py
+│   │   ├── login.py
+│   │   └── register.py
+│   ├── get_sensor_data.py
+│   ├── __init__.py
+│   ├── lib
+│   │   ├── helper.py
+│   │   └── __init__.py
+│   ├── __pycache__
+│   └── update_device.py
+└── vars
+    └── dev.json
+
+5 directories, 17 files
+
+```
+#### Postman API collection
+
+Under docs folder you will find Postman API collection that you can import in postman for quick execution.
+
+#### NOTE: From Login API, response contains message and JWT Auth token in bearer format like below:
+
+```
+"b'ejkfjdjfdjfjdkjfklsjdfkjdsfkjdskfj.hdsfjhjhkjhjkhdsjfhsjkdhfjkhjkhjkhkjdf.sadkjhjkhjkhd'"
 ```
 
-To learn more about the capabilities of `serverless-offline`, please refer to its [GitHub repository](https://github.com/dherault/serverless-offline).
+When using token in postman please use only token-string excluding `b'token-string'`
 
-### Bundling dependencies
+In case of any query email to proffessional.himanshu@gmail.com 
 
-In case you would like to include 3rd party dependencies, you will need to use a plugin called `serverless-python-requirements`. You can set it up by running the following command:
+Thanks
 
-```bash
-serverless plugin install -n serverless-python-requirements
-```
-
-Running the above will automatically add `serverless-python-requirements` to `plugins` section in your `serverless.yml` file and add it as a `devDependency` to `package.json` file. The `package.json` file will be automatically created if it doesn't exist beforehand. Now you will be able to add your dependencies to `requirements.txt` file (`Pipfile` and `pyproject.toml` is also supported but requires additional configuration) and they will be automatically injected to Lambda package during build process. For more details about the plugin's configuration, please refer to [official documentation](https://github.com/UnitedIncome/serverless-python-requirements).
