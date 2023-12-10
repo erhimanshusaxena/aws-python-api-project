@@ -2,6 +2,7 @@ import json
 import logging
 import boto3
 import os
+from datetime import datetime
 from src.lib import helper
 from boto3.dynamodb.conditions import Key
 
@@ -15,9 +16,11 @@ AUTH_SECRET = os.environ['AUTH_SECRET']
 
 # scanning sensor data table for dates between fromm_date and to_date
 def get_sensor_data(from_date, to_date):
+    print(f"From date: {from_date}")
+    print(f"To date: {to_date}")
     try:
         message = table.scan(
-            FilterExpression=Key("timestamp").between(from_date, to_date)
+            FilterExpression=Key("timestamp").between(str(from_date), str(to_date))
         )
         message = message.get("Items")
         logging.debug(message)
@@ -34,8 +37,9 @@ def query(event, context):
     # Checking if token is present and its valid token
     if token and helper.verify_token(token):
         query_params = event.get('queryStringParameters')
-        from_date = query_params.get('from_date')
-        to_date = query_params.get('to_date')
+        # From and To date should be of format of epoch time so date time should be converted
+        from_date = datetime.strptime(query_params.get('from_date'), '%m/%d/%y %H:%M:%S').timestamp()
+        to_date = datetime.strptime(query_params.get('to_date'), '%m/%d/%y %H:%M:%S').timestamp()
 
         # Checking from_date and to_date of sensor date
         # if both present process get request

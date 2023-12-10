@@ -2,7 +2,7 @@ import json
 import logging
 import boto3
 import os
-import datetime
+import time
 from src.lib import helper
 
 # Initialising Boto3 DynamoDB object.
@@ -23,7 +23,7 @@ def add_sensor(sensor_id, device_id, name="Sensor Name", sensor_type="Temperatur
                   'sensor_name': {'S': name},
                   'sensor_type': {'S': sensor_type},
                   'sensor_value': {'S': sensor_value},
-                  'timestamp': {'S': str(datetime.datetime.now())}
+                  'timestamp': {'S': str(time.time())}
                   }
         )
         message = "Device added successfully!"
