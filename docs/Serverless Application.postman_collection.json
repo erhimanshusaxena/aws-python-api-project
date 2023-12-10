@@ -33,6 +33,13 @@
 					"path": [
 						"dev",
 						"health"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "123456",
+							"disabled": true
+						}
 					]
 				}
 			},
@@ -51,7 +58,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"id\": \"1\",\n    \"device_name\": \"First Device\",\n    \"device_description\": \"Description\"\n}",
+					"raw": "{\n    \"id\": \"HS11023\",\n    \"device_name\": \"NETWORK ROUTER\",\n    \"device_description\": \"Router for network check\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -84,7 +91,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"id\": \"1\",\n    \"device_new_name\": \"Updated Name\"\n}",
+					"raw": "{\n    \"id\": \"HS11023\",\n    \"device_new_name\": \"TP Network Router\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -130,7 +137,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"id\": \"3\",\n    \"device_id\": \"1\",\n    \"sensor_name\": \"Third Device\",\n    \"sensor_type\": \"Pressure\",\n    \"sensor_value\":\"23\",\n    \"description\": \"Test description\"\n}",
+					"raw": "{\n    \"id\": \"HS11023456\",\n    \"device_id\": \"HS11023\",\n    \"sensor_name\": \"Third Device\",\n    \"sensor_type\": \"Pressure\",\n    \"sensor_value\":\"23\",\n    \"description\": \"Test description\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -174,7 +181,7 @@
 					}
 				},
 				"url": {
-					"raw": "{{base_url}}/dev/getSensorData?from_date=2023-12-09 16:26:52.653226&to_date=2023-12-09 18:26:52.653226",
+					"raw": "{{base_url}}/dev/getSensorData?from_date=12/10/23 13:55:26&to_date=12/10/23 23:55:26",
 					"host": [
 						"{{base_url}}"
 					],
@@ -185,11 +192,13 @@
 					"query": [
 						{
 							"key": "from_date",
-							"value": "2023-12-09 16:26:52.653226"
+							"value": "12/10/23 13:55:26",
+							"description": "'%m/%d/%y %H:%M:%S'"
 						},
 						{
 							"key": "to_date",
-							"value": "2023-12-09 18:26:52.653226"
+							"value": "12/10/23 23:55:26",
+							"description": "'%m/%d/%y %H:%M:%S'"
 						}
 					]
 				}
