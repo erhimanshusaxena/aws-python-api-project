@@ -1,0 +1,286 @@
+{
+	"info": {
+		"_postman_id": "45cab46a-8200-4519-affe-de63e6b34d81",
+		"name": "Serverless Application",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31464389"
+	},
+	"item": [
+		{
+			"name": "demo",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Health-Check",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-auth-token",
+						"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhdXRoIiwiZW1haWwiOiJ0ZXN0QHRlc3QuY29tIiwiaWQiOiIyN2M3ZDk2Ni03ZWQzLTQwZWQtODIwZi1kMGI2Mzc5ODBhZjcifQ.W-6G_NJyZyZQTVkzzToPZeTeAfbBWbpxQvzPC9OF7Rw",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/dev/health",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"dev",
+						"health"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Device",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-auth-token",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"1\",\n    \"device_name\": \"First Device\",\n    \"device_description\": \"Description\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/dev/addDevice",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"dev",
+						"addDevice"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Device",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "x-auth-token",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"1\",\n    \"device_new_name\": \"Updated Name\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/dev/updateDevice",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"dev",
+						"updateDevice"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Sensor",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var moment = require('moment');",
+							"",
+							"pm.environment.set('currentdate', moment().format((\"YYYY-MM-DD\")));"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-auth-token",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"3\",\n    \"device_id\": \"1\",\n    \"sensor_name\": \"Third Device\",\n    \"sensor_type\": \"Pressure\",\n    \"sensor_value\":\"23\",\n    \"description\": \"Test description\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/dev/addSensor",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"dev",
+						"addSensor"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Sensor Data",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-auth-token",
+						"value": "{{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/dev/getSensorData?from_date=2023-12-09 16:26:52.653226&to_date=2023-12-09 18:26:52.653226",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"dev",
+						"getSensorData"
+					],
+					"query": [
+						{
+							"key": "from_date",
+							"value": "2023-12-09 16:26:52.653226"
+						},
+						{
+							"key": "to_date",
+							"value": "2023-12-09 18:26:52.653226"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"test@test.com\",\n    \"password\": \"P@assword1\",\n    \"password_confirmation\":\"P@assword1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/dev/users/register",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"dev",
+						"users",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"test@test.com\",\n    \"password\": \"P@assword1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/dev/users/login",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"dev",
+						"users",
+						"login"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "https://dsnrmn84ok.execute-api.us-east-1.amazonaws.com"
+		},
+		{
+			"key": "token",
+			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhdXRoIiwiZW1haWwiOiJ0ZXN0QHRlc3QuY29tIiwiaWQiOiIzM2NlOWZkZC02MjcyLTRhOWYtYTc4NS0xZmRjMzg5MTRhYjkifQ.YWLGON3FBfr9g1p2qEa6Cr3Oqzr69-eqTCVkYvNxQV0"
+		}
+	]
+}
